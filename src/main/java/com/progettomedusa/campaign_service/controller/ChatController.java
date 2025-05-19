@@ -3,10 +3,40 @@ package com.progettomedusa.campaign_service.controller;
 import com.progettomedusa.campaign_service.model.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 
-@Controller
+@RestController
+@Controller("/api/chat")
 public class ChatController {
+
+    @GetMapping
+    public ResponseEntity<List<ChatMessage>> getAllChats() {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ChatMessage> getChatById(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<ChatMessage> createChat(@RequestBody ChatMessage chatMessage) {
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ChatMessage> updateChat(@PathVariable Long id, @RequestBody ChatMessage chatMessage) {
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteChat(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
+    }
    /* @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(ChatMessage message) {
