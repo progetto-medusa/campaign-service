@@ -1,4 +1,4 @@
-package com.progettomedusa.campaign_service.dto;
+package com.progettomedusa.campaign_service.model.dto;
 
 public class CampaignDTO {
    private String name;
@@ -6,22 +6,31 @@ public class CampaignDTO {
    private String password;
    private String ruleVersion;
    private boolean isPrivate;
+   private Long userId;
 
-   public CampaignDTO(String name, String description, String password, String ruleVersion, boolean isPrivate) {
-       this.name = name;
-       this.description = description;
-       this.password = password;
-       this.ruleVersion = ruleVersion;
-       this.isPrivate = isPrivate;
-   }
+    public CampaignDTO(String name, String description, String password, String ruleVersion, boolean isPrivate, Long userId) {
+        this.name = name;
+        this.description = description;
+        this.password = password;
+        this.ruleVersion = ruleVersion;
+        this.isPrivate = isPrivate;
+        this.userId = userId;
+    }
 
-   public String getName() { return name; }
+    public String getName() { return name; }
    public String getDescription() { return description; }
    public String getPassword() { return password; }
    public String getRuleVersion() { return ruleVersion; }
    public boolean isPrivate() { return isPrivate; }
+   public Long getUserId() {
+        return userId;
+    }
 
-   public void setName(String name) { this.name = name; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setName(String name) { this.name = name; }
    public void setDescription(String description) { this.description = description; }
    public void setPassword(String password) { this.password = password; }
    public void setRuleVersion(String ruleVersion) { this.ruleVersion = ruleVersion; }

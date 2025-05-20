@@ -1,7 +1,8 @@
 package com.progettomedusa.campaign_service.model.converter;
 
+import com.progettomedusa.campaign_service.model.po.UserPO;
 import org.springframework.stereotype.Component;
-import com.progettomedusa.campaign_service.dto.CampaignDTO;
+import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
 
 @Component
@@ -14,7 +15,8 @@ public class CampaignConverter {
                 campaignPO.getDescription(),
                 campaignPO.getPassword(),
                 campaignPO.getRuleVersion(),
-                campaignPO.getIsPrivate()
+                campaignPO.getIsPrivate(),
+                campaignPO.getId()
         );
     }
 
@@ -22,12 +24,20 @@ public class CampaignConverter {
         if (campaignDTO == null) {
             return null;
         }
-        return new CampaignPO(
-                campaignDTO.getName(),
-                campaignDTO.isPrivate(),
-                campaignDTO.getPassword(),
-                campaignDTO.getDescription(),
-                campaignDTO.getRuleVersion()
-        );
+
+        CampaignPO campaign = new CampaignPO();
+        campaign.setName(campaignDTO.getName());
+        campaign.setIsPrivate(Boolean.TRUE.equals(campaignDTO.isPrivate())); // più sicuro
+        campaign.setPassword(campaignDTO.getPassword());
+        campaign.setDescription(campaignDTO.getDescription());
+        campaign.setRuleVersion(campaignDTO.getRuleVersion());
+
+        if (campaignDTO.getUserId() != null) {
+            UserPO user = new UserPO();
+            user.setId(campaignDTO.getUserId());
+            campaign.setUser(user);
+        }
+
+        return campaign;
     }
 }

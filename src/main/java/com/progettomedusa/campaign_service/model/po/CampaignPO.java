@@ -1,53 +1,55 @@
 package com.progettomedusa.campaign_service.model.po;
 
 import jakarta.persistence.*;
+import org.apache.catalina.User;
 
 @Entity
 @Table(name = "campaign")
 public class CampaignPO {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
-    @Column(name = "name", nullable = false, length = 50)
+    private Long id;
+
+    @Column(nullable = false, length = 50)
     private String name;
-    
-    @Column(name = "isPrivate")
+
+    @Column(name = "is_private")
     private Boolean isPrivate;
-    
-    @Column(name = "password", length = 50)
+
+    @Column(length = 50)
     private String password;
-    
-    @Column(name = "description", nullable = false, length = 500)
+
+    @Column(nullable = false, length = 500)
     private String description;
-    
+
     @Column(name = "rule_version", nullable = false, length = 20)
     private String ruleVersion;
-    
-    /*@ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
-    private User user;*/
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id"))
+    private UserPO user;
     // Costruttore vuoto
     public CampaignPO() {}
 
     // Costruttore con parametri
-    public CampaignPO(String name, Boolean isPrivate, String password,
-                      String description, String ruleVersion) {
+
+    public CampaignPO(String name, Boolean isPrivate, String password, String description, String ruleVersion, UserPO user) {
         this.name = name;
         this.isPrivate = isPrivate;
         this.password = password;
         this.description = description;
         this.ruleVersion = ruleVersion;
+        this.user = user;
     }
 
     // Getters e Setters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -91,7 +93,22 @@ public class CampaignPO {
         this.ruleVersion = ruleVersion;
     }
 
-   /* public User getUser() {
+    public Boolean getPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public UserPO getUser() {
+        return user;
+    }
+
+    public void setUser(UserPO user) {
+        this.user = user;
+    }
+/* public User getUser() {
         return user;
     }
 
