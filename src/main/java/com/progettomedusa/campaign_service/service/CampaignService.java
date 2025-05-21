@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.progettomedusa.campaign_service.model.converter.CampaignConverter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CampaignService {
 
@@ -17,11 +20,25 @@ public class CampaignService {
     @Autowired
     private CampaignRepository campaignRepository;
 
+    @Autowired
+    CampaignConverter campaignConverter;
+
 
     public void createCampaign(CampaignDTO campaignDTO) {
         CampaignPO campaign = CampaignConverter.toEntity(campaignDTO);
         logger.debug("DTO convertito in entità campagna: " + campaign);
         campaignRepository.save(campaign);
+    }
+
+    public List<CampaignDTO> getAllCampaigns() {
+        List<CampaignPO> campaigns = campaignRepository.findAll();
+
+        List<CampaignDTO> campaignDTOs = new ArrayList<>();
+        for (CampaignPO campaign : campaigns) {
+            campaignDTOs.add(CampaignConverter.campaignDTO(campaign));
+            logger.debug("Campagna trovata: " + campaign);
+        }
+        return campaignDTOs;
     }
 
     public CampaignPO getCampaignById(Long id) {
@@ -32,21 +49,21 @@ public class CampaignService {
 
     public CampaignPO updateCampaign(Long id, CampaignDTO campaignDTO) {
         logger.debug("DTO convertito in entità campagna: " + campaignDTO);
-//        CampaignPO currentcampaign = campaignRepository.getById(id);
-        CampaignPO currentcampaign = new CampaignPO();
-        currentcampaign.setName(campaignDTO.getName());
-        currentcampaign.setDescription(campaignDTO.getDescription());
-        currentcampaign.setPassword(campaignDTO.getPassword());
-        currentcampaign.setRuleVersion(campaignDTO.getRuleVersion());
-        currentcampaign.setIsPrivate(campaignDTO.isPrivate());
+        CampaignPO currentCampaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Non esiste nessuna campagna con id: " + id));
+        currentCampaign.setName(campaignDTO.getName());
+        currentCampaign.setDescription(campaignDTO.getDescription());
+        currentCampaign.setPassword(campaignDTO.getPassword());
+        currentCampaign.setRuleVersion(campaignDTO.getRuleVersion());
+        currentCampaign.setIsPrivate(campaignDTO.isPrivate());
 //        return campaignRepository.save(currentcampaign);
-        return null;
+        return campaignRepository.save(currentCampaign);
     }
     public void deleteCampaign(Long id) {
         logger.debug("Sono stati cancellati i dati della campagna con id:");
-//        if(!campaignRepository.existsById(id)) {
-//            throw new RuntimeException("Non esiste nessuna campagna con id: " + id);
-//        }
-//        campaignRepository.deleteById(id);
+        if(!campaignRepository.existsById(id)) {
+            throw new RuntimeException("Non esiste nessuna campagna con id: " + id);
+        }
+        campaignRepository.deleteById(id);
     }
 }

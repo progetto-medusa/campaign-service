@@ -6,15 +6,15 @@ public class CampaignDTO {
    private String password;
    private String ruleVersion;
    private boolean isPrivate;
-   private Long userId;
+   //private String userId;
 
-    public CampaignDTO(String name, String description, String password, String ruleVersion, boolean isPrivate, Long userId) {
+    public CampaignDTO(String name, String description, String password, String ruleVersion, boolean isPrivate) {
         this.name = name;
         this.description = description;
         this.password = password;
         this.ruleVersion = ruleVersion;
         this.isPrivate = isPrivate;
-        this.userId = userId;
+        //this.userId = userId;
     }
 
     public String getName() { return name; }
@@ -22,13 +22,13 @@ public class CampaignDTO {
    public String getPassword() { return password; }
    public String getRuleVersion() { return ruleVersion; }
    public boolean isPrivate() { return isPrivate; }
-   public Long getUserId() {
+ /*  public String getUserId() {
         return userId;
-    }
+    }*/
 
-    public void setUserId(Long userId) {
+   /* public void setUserId(String userId) {
         this.userId = userId;
-    }
+    }*/
 
     public void setName(String name) { this.name = name; }
    public void setDescription(String description) { this.description = description; }

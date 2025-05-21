@@ -1,6 +1,6 @@
 package com.progettomedusa.campaign_service.model.po;
 
-import jakarta.persistence.*;
+/* import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -72,4 +72,4 @@ public class UserPO {
         this.role = role;
     }
 }
-
+*/

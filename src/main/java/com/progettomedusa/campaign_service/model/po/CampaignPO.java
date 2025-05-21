@@ -1,7 +1,6 @@
 package com.progettomedusa.campaign_service.model.po;
 
 import jakarta.persistence.*;
-import org.apache.catalina.User;
 
 @Entity
 @Table(name = "campaign")
@@ -26,22 +25,24 @@ public class CampaignPO {
     @Column(name = "rule_version", nullable = false, length = 20)
     private String ruleVersion;
 
-    @OneToOne
+   // @Column(name = "user_id")
+    //private String usersId;
+   /* @OneToOne
     @MapsId
     @JoinColumn(name = "id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id"))
-    private UserPO user;
+    private String user;*/
     // Costruttore vuoto
     public CampaignPO() {}
 
     // Costruttore con parametri
 
-    public CampaignPO(String name, Boolean isPrivate, String password, String description, String ruleVersion, UserPO user) {
+    public CampaignPO(String name, Boolean isPrivate, String password, String description, String ruleVersion) {
         this.name = name;
         this.isPrivate = isPrivate;
         this.password = password;
         this.description = description;
         this.ruleVersion = ruleVersion;
-        this.user = user;
+        //this.usersId = usersId;
     }
 
     // Getters e Setters
@@ -101,13 +102,13 @@ public class CampaignPO {
         isPrivate = aPrivate;
     }
 
-    public UserPO getUser() {
-        return user;
-    }
+    /*public String getUsersId() {
+        return usersId;
+    }*/
 
-    public void setUser(UserPO user) {
-        this.user = user;
-    }
+   /* public void setUsersId(String user) {
+        this.usersId = usersId;
+    }*/
 /* public User getUser() {
         return user;
     }
