@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: campaign-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/progetto_medusa
+    username: root
+    password: admin_mysql01
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    root: INFO
+    com:
+      progettomedusa: DEBUG
+
+security:
+  licensed-apps:
+    - local-postman
+    - app2
+    - app3
