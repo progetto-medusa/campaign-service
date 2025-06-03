@@ -1,93 +1,155 @@
 package com.progettomedusa.campaign_service.model.converter;
 
 import com.progettomedusa.campaign_service.config.AppProperties;
-import com.progettomedusa.campaign_service.model.response.RestResponse;
+import com.progettomedusa.campaign_service.model.request.CreateCampaignRequest;
+import com.progettomedusa.campaign_service.model.request.UpdateCampaignRequest;
+import com.progettomedusa.campaign_service.model.response.*;
 import com.progettomedusa.campaign_service.util.Tools;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 import org.springframework.stereotype.Component;
 import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.progettomedusa.campaign_service.util.Constants.BASE_ERROR_DETAILS;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class CampaignConverter {
 
-    private final AppProperties appProperties;
     private final Tools tools;
+    private final AppProperties campaignApplicationProperties;
 
-    public RestResponse retrieveRestResponseForRootPath(CampaignDTO campaignDTO) {
-        log.debug("Converter - retrieve rest response for root path START with Campaign DT -> {}", campaignDTO);
-
-        RestResponse restResponse = new RestResponse();
-
-        restResponse.setMessage("Service is ONLINE");
-        restResponse.setDomain(appProperties.getName());
-        restResponse.setDetailed("Called for campaign -> " + campaignDTO.getName());
-        restResponse.setTimestamp(tools.getInstant());
-
-        log.debug("Converter - retrieve rest response for root path END with Rest Response -> {}", restResponse);
-        return restResponse;
-    }
-    public static CampaignDTO campaignDTO(CampaignPO campaignPO) {
-        log.debug("Converter - Converting CampaignPO to CampaignDTO START for Campaign PO -> {}", campaignPO);
-
-        if (campaignPO == null)  {
-            log.warn("Converter - Input CampaignPO is null");
-            return null;
-        }
+    public CampaignDTO createRequestToCampaignDTO(CreateCampaignRequest createCampaignRequest) {
         CampaignDTO campaignDTO = new CampaignDTO();
-        campaignDTO.setName(campaignPO.getName());
-        campaignDTO.setDescription(campaignPO.getDescription());
-        campaignDTO.setPassword(campaignPO.getPassword());
-        campaignDTO.setRuleVersion(campaignPO.getRuleVersion());
-        /*campaignDTO.setUserId(campaignPO.getUser().getId());*/
-        log.debug("Converter - Converting CampaignPO to CampaignDTO END with CampaignDTO -> {}", campaignDTO);
+        campaignDTO.setName(createCampaignRequest.getName());
+        campaignDTO.setDescription(createCampaignRequest.getDescription());
+        campaignDTO.setRuleVersion(createCampaignRequest.getRuleVersion());
+        campaignDTO.setBePrivate(createCampaignRequest.isBePrivate());
+
+        if (createCampaignRequest.isBePrivate()) {
+            campaignDTO.setPassword(createCampaignRequest.getPassword());
+        }
         return campaignDTO;
     }
 
-    public CampaignPO toEntity(CampaignDTO campaignDTO) {
-        log.debug("Converter - Converting CampaignDTO to CampaignPO START for CampaignDTO -> {}", campaignDTO);
-        if (campaignDTO == null) {
-            log.warn("Converter - Input CampaignDTO is null");
-            return null;
-        }
-
-        CampaignPO campaign = new CampaignPO();
-        campaign.setName(campaignDTO.getName());
-        campaign.setBePrivate(campaignDTO.isBePrivate());
-        campaign.setPassword(campaignDTO.getPassword());
-        campaign.setDescription(campaignDTO.getDescription());
-        campaign.setRuleVersion(campaignDTO.getRuleVersion());
-        /*campaign.setUsersId(campaignDTO.getUserId());*/
-        /*if (campaignDTO.getUserId() != null) {
-            UserPO user = new UserPO();
-            user.setId(campaignDTO.getUserId());
-            campaign.setUser(user);
-        }*/
-        log.debug("Converter - Converting CampaignDTO to CampaignPO END with CampaignPO -> {}", campaign);
-        return campaign;
+    public CreateRequestResponse createRequestResponse(CampaignPO campaignCreated) {
+        CreateRequestResponse createRequestResponse = new CreateRequestResponse();
+        createRequestResponse.setMessage("Campagna creata con successo");
+        createRequestResponse.setDomain(campaignApplicationProperties.getName());
+        createRequestResponse.setTimestamp(tools.getInstant());
+        createRequestResponse.setDetailed("Nome campagna creato: " + campaignCreated.getName());
+        log.info("CampaignConverter - createRequestResponse END with createRequestRespons -> {}e", createRequestResponse);
+        return createRequestResponse;
     }
 
-    public RestResponse buildGetUserResponse(List<CampaignPO> campaignPOList, CampaignDTO campaignDTO) {
-        log.debug("Converter - build get CampaignPO response START with CampaignPOList -> {}, DTO -> {}", campaignPOList, campaignDTO);
-
-        RestResponse restResponse = new RestResponse();
-        restResponse.setMessage("CampaignPOList retrieved successfully");
-        restResponse.setDomain(appProperties.getName());
-
-        try {
-            restResponse.setDetailed("Requested by: " + campaignDTO.getName());
-        } catch (NullPointerException e) {
-            restResponse.setDetailed("Requested by: Anonymous");
-        }
-
-        restResponse.setTimestamp(tools.getInstant());
-        log.debug("Converter - build get CampaignPO response END with RestResponse -> {}", restResponse);
-        return restResponse;
+    public CreateRequestResponse createRequestResponse(Exception e) {
+        CreateRequestResponse createRequestResponse = new CreateRequestResponse();
+        createRequestResponse.setMessage(e.getMessage());
+        createRequestResponse.setDomain(campaignApplicationProperties.getName());
+        createRequestResponse.setTimestamp(tools.getInstant());
+        createRequestResponse.setDetailed(BASE_ERROR_DETAILS);
+        log.error("CampaignConverter - createRequestResponse END with createRequestResponse -> {}", createRequestResponse);
+        return createRequestResponse;
     }
 
+    public CampaignPO dtoToPo(CampaignDTO campaignDTO) {
+        CampaignPO campaignPO = new CampaignPO();
+        if (campaignDTO.getId() != null) {
+            campaignPO.setId(Long.valueOf(campaignDTO.getId()));
+        }
+        campaignPO.setName(campaignDTO.getName());
+        campaignPO.setDescription(campaignDTO.getDescription());
+        campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
+        campaignPO.setBePrivate(campaignDTO.isBePrivate());
+        if (campaignDTO.isBePrivate()) {
+            campaignPO.setPassword(campaignDTO.getPassword());
+        }
+        log.info("CampaignConverter - dtoToPo END with campaignPO -> {}", campaignPO);
+        return campaignPO;
+    }
 
+    public GetCampaignsResponse listOfCampaignsGetCampaignsResponse(List<CampaignPO> campaignPOList) {
+        GetCampaignsResponse getCampaignsResponse = new GetCampaignsResponse();
+
+        List<GetCampaignResponse> getCampaignResponseList = new ArrayList<>();
+
+        for (CampaignPO campaignPO : campaignPOList) {
+            GetCampaignResponse getCampaignResponse = campaignPoToGetCampaignResponse(campaignPO, true);
+            getCampaignResponseList.add(getCampaignResponse);
+        }
+
+        getCampaignsResponse.setCampaigns(getCampaignResponseList);
+        getCampaignsResponse.setDomain(campaignApplicationProperties.getName());
+        getCampaignsResponse.setTimestamp(tools.getInstant());
+
+        log.info("CampaignConverter - listOfCampaignsGetCampaignsResponse END with getCampaignsResponse -> {}", getCampaignsResponse);
+        return getCampaignsResponse;
+    }
+
+    public GetCampaignResponse campaignPoToGetCampaignResponse(CampaignPO campaignPO, boolean internal) {
+        GetCampaignResponse getCampaignResponse = new GetCampaignResponse();
+
+        CampaignResponse campaignResponse = new CampaignResponse();
+        campaignResponse.setId(campaignPO.getId());
+        campaignResponse.setName(campaignPO.getName());
+        campaignResponse.setDescription(campaignPO.getDescription());
+        getCampaignResponse.setCampaign(campaignResponse);
+        if (!internal) {
+            getCampaignResponse.setDomain(campaignApplicationProperties.getName());
+            getCampaignResponse.setTimestamp(tools.getInstant());
+        }
+        log.info("CampaignConverter - campaignPoToGetCampaignResponse END with getCampaignResponse -> {}", getCampaignResponse);
+        return getCampaignResponse;
+    }
+
+    public GetCampaignResponse getCampaignResponse() {
+        GetCampaignResponse getCampaignResponse = new GetCampaignResponse();
+        getCampaignResponse.setCampaign(new CampaignResponse());
+        getCampaignResponse.setMessage("CAMPAIGN_NOT_FOUND_MESSAGE");
+        getCampaignResponse.setDomain(campaignApplicationProperties.getName());
+        getCampaignResponse.setTimestamp(tools.getInstant());
+        log.info("CampaignConverter - getCampaignResponse END with getCampaignResponse -> {}", getCampaignResponse);
+        return getCampaignResponse;
+    }
+
+    public CampaignDTO updateRequestToDto(UpdateCampaignRequest updateCampaignRequest) {
+        CampaignDTO campaignDTO = new CampaignDTO();
+        campaignDTO.setId(updateCampaignRequest.getId());
+        campaignDTO.setName(updateCampaignRequest.getName());
+        campaignDTO.setDescription(updateCampaignRequest.getDescription());
+        campaignDTO.setRuleVersion(updateCampaignRequest.getRuleVersion());
+
+        log.info("CampaignConverter - updateRequestToDto END with campaignDTO -> {}", campaignDTO);
+        return campaignDTO;
+    }
+
+    public UpdateCampaignResponse campaignToUpdateResponse(CampaignPO campaignUpdated) {
+        CampaignResponse campaignResponse = new CampaignResponse();
+        campaignResponse.setId(campaignUpdated.getId());
+        campaignResponse.setName(campaignUpdated.getName());
+        campaignResponse.setDescription(campaignUpdated.getDescription());
+        campaignResponse.setRuleVersion(campaignUpdated.getRuleVersion());
+
+        UpdateCampaignResponse updateCampaignResponse = new UpdateCampaignResponse();
+        updateCampaignResponse.setMessage("Campagna aggiornata con successo");
+        updateCampaignResponse.setDomain(campaignApplicationProperties.getName());
+        updateCampaignResponse.setTimestamp(tools.getInstant());
+        updateCampaignResponse.setDetailed("Nome campagna aggiornato: " + campaignUpdated.getName());
+        updateCampaignResponse.setCampaign(campaignResponse);
+        log.info("CampaignConverter - campaignToUpdateResponse END with updateCampaignResponse -> {}", updateCampaignResponse);
+        return updateCampaignResponse;
+    }
+    public DeleteCampaignResponse deleteCampaignResponse() {
+        DeleteCampaignResponse deleteCampaignResponse = new DeleteCampaignResponse();
+        deleteCampaignResponse.setMessage("CAMPAIGN_DELETED_MESSAGE");
+        deleteCampaignResponse.setDomain(campaignApplicationProperties.getName());
+        deleteCampaignResponse.setTimestamp(tools.getInstant());
+        log.info("CampaignConverter - deleteCampaignResponse END with deleteCampaignResponse -> {}", deleteCampaignResponse);
+        return deleteCampaignResponse;
+    }
 }

@@ -4,10 +4,13 @@ import com.progettomedusa.campaign_service.config.AppProperties;
 import com.progettomedusa.campaign_service.model.converter.CampaignConverter;
 import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
-import com.progettomedusa.campaign_service.model.response.RestResponse;
+import com.progettomedusa.campaign_service.model.request.CreateCampaignRequest;
+import com.progettomedusa.campaign_service.model.request.UpdateCampaignRequest;
+import com.progettomedusa.campaign_service.model.response.*;
 import com.progettomedusa.campaign_service.service.CampaignService;
 import com.progettomedusa.campaign_service.util.Tools;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.progettomedusa.campaign_service.util.Constants.CAMPAIGN_NOT_FOUND_MESSAGE;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,70 +37,57 @@ public class CampaignController {
     private final AppProperties appProperties;
 
     @PostMapping("/campaign")
-    public ResponseEntity<Object> createCampaign(HttpServletRequest httpServletRequest, @RequestBody CampaignDTO campaignDTO) {
-      log.info("Sono stati creati i dati della campagna");
-
-      campaignService.createCampaign(campaignDTO);
-
-        RestResponse restResponse = new RestResponse();
-        restResponse.setMessage("Campagna creata con successo");
-        restResponse.setDetailed("Nome campagna creato: " + campaignDTO.getName());
-        restResponse.setDomain(appProperties.getName());
-        restResponse.setTimestamp(tools.getInstant());
-
-        log.info("Controller - creazione campagna: DONE");
-        return new ResponseEntity<>(restResponse, HttpStatus.CREATED);
+    public ResponseEntity<CreateRequestResponse> createCampaign(@Valid @RequestBody CreateCampaignRequest createCampaignRequest) {
+      log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
+      CampaignDTO campaignDTO = campaignConverter.createRequestToCampaignDTO(createCampaignRequest);
+      CreateRequestResponse createRequestResponse = campaignService.createCampaign(campaignDTO);
+      log.info("Controller - createCampaign END with response -> {}", createRequestResponse);
+      return new ResponseEntity<>(createRequestResponse, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/campaign")
-    public ResponseEntity<Object> getAllCampaigns(HttpServletRequest httpServletRequest) {
-        log.info("Controller - recuper lista campagne: START");
-        List<CampaignDTO> campaignDTOs = campaignService.getAllCampaigns();
+    @GetMapping("/campaigns")
+    public ResponseEntity<GetCampaignsResponse> getCampaigns() {
+        log.info("Controller - getCmpaigns: START");
+        GetCampaignsResponse getCampaignsResponse = campaignService.getCampaigns();
+        log.info("Controller - getCampaigns END with response -> {}", getCampaignsResponse);
 
-        List<CampaignPO> campaignPOs = new ArrayList<>();
-
-        for (CampaignDTO campaignDTO : campaignDTOs) {
-            campaignPOs.add(campaignConverter.toEntity(campaignDTO));
+        if (getCampaignsResponse.getDetailed() == null) {
+            return new ResponseEntity<>(getCampaignsResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(getCampaignsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        RestResponse restResponse = campaignConverter.buildGetUserResponse(campaignPOs, null);
-        log.info("Controller - recuper lista campagne: END");
-        return new ResponseEntity<>(restResponse, HttpStatus.OK);
-        }
+    }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/campaign/{id}")
+    public ResponseEntity<GetCampaignResponse> getCampaign(@PathVariable Long id) {
+        log.info("Controller - getCampaign START with id -> {}", id);
+        GetCampaignResponse getCampaignResponse = campaignService.getCampaign(id);
+        log.info("Controller - getCampaign END with response -> {}", getCampaignResponse);
+
+        if (getCampaignResponse.getMessage() == null) {
+            return new ResponseEntity<>(getCampaignResponse, HttpStatus.OK);
+        } else if (getCampaignResponse.getMessage().equals(CAMPAIGN_NOT_FOUND_MESSAGE)) {
+            return new ResponseEntity<>(getCampaignResponse, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(getCampaignResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PutMapping("/campaign/{id}")
-    public ResponseEntity<Object> updateCampaign(HttpServletRequest httpServletRequest, @PathVariable Long id, @RequestBody CampaignDTO campaignDTO) {
-        log.info("Controller - aggiornamento campagna con ID {}: START", id);
-
-        campaignService.updateCampaign(id, campaignDTO);
-
-        RestResponse restResponse = new RestResponse();
-        restResponse.setMessage("Campagna aggiornata con successo");
-        restResponse.setDetailed("Nome campagna aggiornato: " + campaignDTO.getName());
-        restResponse.setDomain(appProperties.getName());
-        restResponse.setTimestamp(tools.getInstant());
-
-        log.info("Controller - aggiornamento campagna con ID {}: DONE", id);
-        return new ResponseEntity<>(restResponse, HttpStatus.OK);
+    public ResponseEntity<Object> updateCampaign(@Valid @RequestBody UpdateCampaignRequest updateCampaignRequest) {
+        log.info("Controller - updateCampaign START with request -> {}", updateCampaignRequest);
+        CampaignDTO campaignDTO = campaignConverter.updateRequestToDto(updateCampaignRequest);
+        UpdateCampaignResponse updateCampaignResponse = campaignService.updateCampaign(campaignDTO);
+        log.info("Controller - updateCampaign END with response -> {}", updateCampaignResponse);
+        return new ResponseEntity<>(updateCampaignResponse, HttpStatus.OK);
 
     }
 
     @DeleteMapping("/campaign/{id}")
-    public ResponseEntity<Object> deleteCampaign(HttpServletRequest httpServletRequest, @PathVariable Long id) {
-        log.info("Controller - cancellazione campagna con ID {}: START", id);
-        campaignService.deleteCampaign(id);
-
-        RestResponse restResponse = new RestResponse();
-        restResponse.setMessage("Campagna cancellata con successo");
-        restResponse.setDetailed("Nome campagna cancellato: " + id);
-        restResponse.setDomain(appProperties.getName());
-        restResponse.setTimestamp(tools.getInstant());
-
-        log.info("Controller - cancellazione campagna con ID {}: DONE", id);
-        return new ResponseEntity<>(restResponse, HttpStatus.OK);
+    public ResponseEntity<Object> deleteCampaign(@PathVariable Long id) {
+        log.info("Controller - deleteCampaign START with id -> {}", id);
+        DeleteCampaignResponse deleteCampaignResponse = campaignService.deleteCampaign(id);
+        log.info("Controller - deleteCampaign END with response -> {}", deleteCampaignResponse);
+        return new ResponseEntity<>(deleteCampaignResponse, HttpStatus.ACCEPTED);
     }
 }

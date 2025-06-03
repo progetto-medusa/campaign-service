@@ -21,6 +21,7 @@ public class HeadersFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String appKey = request.getHeader(HEADER_APP_KEY_NAME);
+
         if (appKey == null || !securityProperties.getLicensedApps().contains(appKey)) {
             log.error("Internal filter - Header retrieved is invalid -> {}", appKey);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
