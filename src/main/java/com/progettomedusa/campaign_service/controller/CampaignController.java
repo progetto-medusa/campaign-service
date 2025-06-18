@@ -41,26 +41,7 @@ public class CampaignController {
 
     @PostMapping("/campaign")
     public ResponseEntity<CreateRequestResponse> createCampaign(@RequestHeader("X-APP-KEY") String appKey, @Valid @RequestBody CreateCampaignRequest createCampaignRequest) {
-        if (createCampaignRequest.isBePrivate()) {
-            String password = createCampaignRequest.getPassword();
-            if (password == null || password.length() < 8 || password.length() > 24) {
-                ErrorMsg errorMsg = ErrorMsg.CPGSRV17;
-                Error error = new Error();
-                error.setCode(errorMsg.getCode());
-                error.setMessage(errorMsg.getMessage());
-                error.setDomain("campaign-service");
-                error.setDetailed("Provided password was either null or wasn't between 8 and 24 characters");
-                error.setTraceId(UUID.randomUUID().toString());
-
-                CreateRequestResponse errorResponse = new CreateRequestResponse();
-                errorResponse.setError(error);
-                errorResponse.setErrorMsg(errorMsg);
-
-                return ResponseEntity.status(errorMsg.getHttpStatus()).body(errorResponse);
-            }
-        }
-
-        log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
+      log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
       CampaignDTO campaignDTO = campaignConverter.createRequestToCampaignDTO(createCampaignRequest);
       CreateRequestResponse createRequestResponse = campaignService.createCampaign(campaignDTO);
       log.info("Controller - createCampaign END with response -> {}", createRequestResponse);

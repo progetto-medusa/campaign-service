@@ -1,16 +1,20 @@
 package com.progettomedusa.campaign_service.service;
 
 import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
+import com.progettomedusa.campaign_service.model.exception.ErrorMsg;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
 import com.progettomedusa.campaign_service.model.response.*;
+import com.progettomedusa.campaign_service.model.response.Error;
 import com.progettomedusa.campaign_service.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.progettomedusa.campaign_service.model.converter.CampaignConverter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +27,25 @@ public class CampaignService {
 
     public CreateRequestResponse createCampaign(CampaignDTO campaignDTO) {
         log.info("Service - Create Campaign START with DTO -> {}", campaignDTO);
+
+        if (campaignDTO.isBePrivate()) {
+            String password = campaignDTO.getPassword();
+            if (password == null || password.length() < 8 || password.length() > 24) {
+                ErrorMsg errorMsg = ErrorMsg.CPGSRV17;
+                Error error = new Error();
+                error.setCode(errorMsg.getCode());
+                error.setMessage(errorMsg.getMessage());
+                error.setDomain("campaign-service");
+                error.setDetailed("Provided password was either null or wasn't between 8 and 24 characters");
+                error.setTraceId(UUID.randomUUID().toString());
+
+                CreateRequestResponse errorResponse = new CreateRequestResponse();
+                errorResponse.setError(error);
+                errorResponse.setErrorMsg(errorMsg);
+
+                return errorResponse;
+            }
+        }
 
         CreateRequestResponse createRequestResponse;
         try {
