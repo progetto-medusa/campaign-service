@@ -12,10 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CampaignResponse {
-    private Long id;
     private String name;
     private String description;
     private String ruleVersion;
-    private String password;
     private boolean bePrivate;
+    private Error error;
 }

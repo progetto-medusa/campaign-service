@@ -29,7 +29,11 @@ public class CampaignConverter {
         campaignDTO.setName(createCampaignRequest.getName());
         campaignDTO.setDescription(createCampaignRequest.getDescription());
         campaignDTO.setRuleVersion(createCampaignRequest.getRuleVersion());
+        campaignDTO.setApplicationId(createCampaignRequest.getApplicationId());
         campaignDTO.setBePrivate(createCampaignRequest.isBePrivate());
+        campaignDTO.setInsertTime(tools.getInstant());
+        campaignDTO.setUpdateTime(tools.getInstant());
+
 
         if (createCampaignRequest.isBePrivate()) {
             campaignDTO.setPassword(createCampaignRequest.getPassword());
@@ -65,7 +69,10 @@ public class CampaignConverter {
         campaignPO.setName(campaignDTO.getName());
         campaignPO.setDescription(campaignDTO.getDescription());
         campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
+        campaignPO.setApplicationId(campaignDTO.getApplicationId());
         campaignPO.setBePrivate(campaignDTO.isBePrivate());
+        campaignPO.setInsertTime(tools.getInstant());
+        campaignPO.setUpdateTime(tools.getInstant());
         if (campaignDTO.isBePrivate()) {
             campaignPO.setPassword(campaignDTO.getPassword());
         }
@@ -95,7 +102,6 @@ public class CampaignConverter {
         GetCampaignResponse getCampaignResponse = new GetCampaignResponse();
 
         CampaignResponse campaignResponse = new CampaignResponse();
-        campaignResponse.setId(campaignPO.getId());
         campaignResponse.setName(campaignPO.getName());
         campaignResponse.setDescription(campaignPO.getDescription());
         getCampaignResponse.setCampaign(campaignResponse);
@@ -121,16 +127,17 @@ public class CampaignConverter {
         CampaignDTO campaignDTO = new CampaignDTO();
         campaignDTO.setId(updateCampaignRequest.getId());
         campaignDTO.setName(updateCampaignRequest.getName());
+        campaignDTO.setApplicationId(updateCampaignRequest.getApplicationId());
         campaignDTO.setDescription(updateCampaignRequest.getDescription());
         campaignDTO.setRuleVersion(updateCampaignRequest.getRuleVersion());
+        campaignDTO.setUpdateTime(tools.getInstant());
 
         log.info("CampaignConverter - updateRequestToDto END with campaignDTO -> {}", campaignDTO);
         return campaignDTO;
     }
 
     public UpdateCampaignResponse campaignToUpdateResponse(CampaignPO campaignUpdated) {
-        CampaignResponse campaignResponse = new CampaignResponse();
-        campaignResponse.setId(campaignUpdated.getId());
+        CampaignResponse campaignResponse = new CampaignResponse();;
         campaignResponse.setName(campaignUpdated.getName());
         campaignResponse.setDescription(campaignUpdated.getDescription());
         campaignResponse.setRuleVersion(campaignUpdated.getRuleVersion());

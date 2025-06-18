@@ -3,10 +3,12 @@ package com.progettomedusa.campaign_service.controller;
 import com.progettomedusa.campaign_service.config.AppProperties;
 import com.progettomedusa.campaign_service.model.converter.CampaignConverter;
 import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
+import com.progettomedusa.campaign_service.model.exception.ErrorMsg;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
 import com.progettomedusa.campaign_service.model.request.CreateCampaignRequest;
 import com.progettomedusa.campaign_service.model.request.UpdateCampaignRequest;
 import com.progettomedusa.campaign_service.model.response.*;
+import com.progettomedusa.campaign_service.model.response.Error;
 import com.progettomedusa.campaign_service.service.CampaignService;
 import com.progettomedusa.campaign_service.util.Tools;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +40,27 @@ public class CampaignController {
     private final AppProperties appProperties;
 
     @PostMapping("/campaign")
-    public ResponseEntity<CreateRequestResponse> createCampaign(@Valid @RequestBody CreateCampaignRequest createCampaignRequest) {
-      log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
+    public ResponseEntity<CreateRequestResponse> createCampaign(@RequestHeader("X-APP-KEY") String appKey, @Valid @RequestBody CreateCampaignRequest createCampaignRequest) {
+        if (createCampaignRequest.isBePrivate()) {
+            String password = createCampaignRequest.getPassword();
+            if (password == null || password.length() < 8 || password.length() > 24) {
+                ErrorMsg errorMsg = ErrorMsg.CPGSRV17;
+                Error error = new Error();
+                error.setCode(errorMsg.getCode());
+                error.setMessage(errorMsg.getMessage());
+                error.setDomain("campaign-service");
+                error.setDetailed("Provided password was either null or wasn't between 8 and 24 characters");
+                error.setTraceId(UUID.randomUUID().toString());
+
+                CreateRequestResponse errorResponse = new CreateRequestResponse();
+                errorResponse.setError(error);
+                errorResponse.setErrorMsg(errorMsg);
+
+                return ResponseEntity.status(errorMsg.getHttpStatus()).body(errorResponse);
+            }
+        }
+
+        log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
       CampaignDTO campaignDTO = campaignConverter.createRequestToCampaignDTO(createCampaignRequest);
       CreateRequestResponse createRequestResponse = campaignService.createCampaign(campaignDTO);
       log.info("Controller - createCampaign END with response -> {}", createRequestResponse);

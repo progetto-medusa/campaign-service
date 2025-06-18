@@ -13,4 +13,7 @@ public class CampaignDTO {
     private String password;
     private String ruleVersion;
     private boolean bePrivate;
+    private String insertTime;
+    private String updateTime;
+    private String applicationId;
 }

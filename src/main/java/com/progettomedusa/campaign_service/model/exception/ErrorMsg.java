@@ -35,6 +35,10 @@ public enum ErrorMsg {
 
     CPGSRV15("CPGSRV15", "User not found in the system", HttpStatus.NOT_FOUND),
 
+    CPGSRV16("CPGSRVV16", "There's already a campaign with that name", HttpStatus.BAD_REQUEST),
+
+    CPGSRV17("CPGSRVV17", "Password must be between 8 and 24 characters", HttpStatus.BAD_REQUEST),
+
     CPGSRV69("CPGSRV69", "Bad Request: missing parameters", HttpStatus.BAD_REQUEST),
 
     CPGSRV99("CPGSRV99", "Generic error", HttpStatus.INTERNAL_SERVER_ERROR);

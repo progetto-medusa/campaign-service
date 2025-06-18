@@ -16,7 +16,7 @@ public class CampaignPO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, unique = true, length = 50)
     private String name;
 
     @Column(name = "is_private")
@@ -28,8 +28,16 @@ public class CampaignPO {
     @Column(nullable = false, length = 500)
     private String description;
 
-    @Column(name = "rule_version", nullable = false, length = 20)
+    @Column(name = "rule_version", nullable = false)
     private String ruleVersion;
 
+    @Column(name = "update_date", nullable = false)
+    private String updateTime;
+
+    @Column(name = "insert_date", nullable = false)
+    private String insertTime;
+
+    @Column(name = "application_id", nullable = false)
+    private String applicationId;
 
 }

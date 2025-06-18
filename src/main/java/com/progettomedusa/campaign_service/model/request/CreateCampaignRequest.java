@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UUID;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCampaignRequest {
-    @NotBlank
     private Long id;
     @NotBlank
+    @NotNull
+    @NotEmpty
     private String name;
     @NotBlank
     @Size(min = 1, max = 500)
@@ -21,10 +24,10 @@ public class CreateCampaignRequest {
     private String ruleVersion;
     @NotNull
     private boolean bePrivate;
-    @NotBlank
-    @Size(min = 8, max = 24)
     private String password;
-    @NotNull
-    @JsonProperty("application_id")
+    @NotBlank
+    @JsonProperty("applicationId")
     private String applicationId;
+    private String updateTime;
+    private String insertTime;
 }
