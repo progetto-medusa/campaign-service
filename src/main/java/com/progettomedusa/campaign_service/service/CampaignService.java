@@ -49,7 +49,7 @@ public class CampaignService {
 
         CreateRequestResponse createRequestResponse;
         try {
-            CampaignPO campaignToCreate = campaignConverter.dtoToPo(campaignDTO);
+            CampaignPO campaignToCreate = campaignConverter.dtoToPoForCreate(campaignDTO);
 
             CampaignPO createdCampaign = campaignRepository.save(campaignToCreate);
             createRequestResponse = campaignConverter.createRequestResponse(createdCampaign);
@@ -88,7 +88,7 @@ public class CampaignService {
 
     public UpdateCampaignResponse updateCampaign(CampaignDTO campaignDTO) {
         log.info("Service - updateCampaign START with DTO -> {}", campaignDTO);
-        CampaignPO campaignToUpdate = campaignConverter.dtoToPo(campaignDTO);
+        CampaignPO campaignToUpdate = campaignConverter.dtoToPoForUpdate(campaignDTO);
         CampaignPO currentCampaign = campaignRepository.save(campaignToUpdate);
         UpdateCampaignResponse updateCampaignResponse = campaignConverter.campaignToUpdateResponse(currentCampaign);
 

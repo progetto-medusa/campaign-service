@@ -60,8 +60,25 @@ public class CampaignConverter {
         log.error("CampaignConverter - createRequestResponse END with createRequestResponse -> {}", createRequestResponse);
         return createRequestResponse;
     }
-
-    public CampaignPO dtoToPo(CampaignDTO campaignDTO) {
+//
+public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
+    CampaignPO campaignPO = new CampaignPO();
+    if (campaignDTO.getId() != null) {
+        campaignPO.setId(Long.valueOf(campaignDTO.getId()));
+    }
+    campaignPO.setName(campaignDTO.getName());
+    campaignPO.setDescription(campaignDTO.getDescription());
+    campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
+    campaignPO.setApplicationId(campaignDTO.getApplicationId());
+    campaignPO.setBePrivate(campaignDTO.isBePrivate());
+    campaignPO.setInsertTime(tools.getInstant());
+    if (campaignDTO.isBePrivate()) {
+        campaignPO.setPassword(campaignDTO.getPassword());
+    }
+    log.info("CampaignConverter - dtoToPoForCreate END with campaignPO -> {}", campaignPO);
+    return campaignPO;
+}
+    public CampaignPO dtoToPoForUpdate(CampaignDTO campaignDTO) {
         CampaignPO campaignPO = new CampaignPO();
         if (campaignDTO.getId() != null) {
             campaignPO.setId(Long.valueOf(campaignDTO.getId()));
@@ -71,12 +88,11 @@ public class CampaignConverter {
         campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
         campaignPO.setApplicationId(campaignDTO.getApplicationId());
         campaignPO.setBePrivate(campaignDTO.isBePrivate());
-        campaignPO.setInsertTime(tools.getInstant());
         campaignPO.setUpdateTime(tools.getInstant());
         if (campaignDTO.isBePrivate()) {
             campaignPO.setPassword(campaignDTO.getPassword());
         }
-        log.info("CampaignConverter - dtoToPo END with campaignPO -> {}", campaignPO);
+        log.info("CampaignConverter - dtoToPoForUpdate END with campaignPO -> {}", campaignPO);
         return campaignPO;
     }
 
