@@ -73,9 +73,9 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version> <!-- Compatibile con PostgreSQL 16 -->
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
