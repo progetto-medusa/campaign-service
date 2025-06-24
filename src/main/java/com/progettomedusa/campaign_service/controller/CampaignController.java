@@ -39,7 +39,7 @@ public class CampaignController {
     private final Tools tools;
     private final AppProperties appProperties;
 
-    @PostMapping("/campaign")
+    @PostMapping("/campaign/create")
     public ResponseEntity<CreateRequestResponse> createCampaign(@RequestHeader("X-APP-KEY") String appKey, @Valid @RequestBody CreateCampaignRequest createCampaignRequest) {
       log.info("Controller - createCampaign START with request -> {}", createCampaignRequest);
       CampaignDTO campaignDTO = campaignConverter.createRequestToCampaignDTO(createCampaignRequest);
@@ -50,7 +50,7 @@ public class CampaignController {
 
     @GetMapping("/campaigns")
     public ResponseEntity<GetCampaignsResponse> getCampaigns() {
-        log.info("Controller - getCmpaigns: START");
+        log.info("Controller - getCampaigns: START");
         GetCampaignsResponse getCampaignsResponse = campaignService.getCampaigns();
         log.info("Controller - getCampaigns END with response -> {}", getCampaignsResponse);
 

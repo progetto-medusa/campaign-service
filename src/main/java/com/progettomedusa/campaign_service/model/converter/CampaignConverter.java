@@ -33,6 +33,7 @@ public class CampaignConverter {
         campaignDTO.setBePrivate(createCampaignRequest.isBePrivate());
         campaignDTO.setInsertTime(tools.getInstant());
         campaignDTO.setUpdateTime(tools.getInstant());
+        campaignDTO.setCreatorUuid(createCampaignRequest.getCreatorUuid());
 
 
         if (createCampaignRequest.isBePrivate()) {
@@ -72,6 +73,7 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
     campaignPO.setApplicationId(campaignDTO.getApplicationId());
     campaignPO.setBePrivate(campaignDTO.isBePrivate());
     campaignPO.setInsertTime(tools.getInstant());
+    campaignPO.setCreatorUuid(campaignPO.getCreatorUuid());
     if (campaignDTO.isBePrivate()) {
         campaignPO.setPassword(campaignDTO.getPassword());
     }

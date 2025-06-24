@@ -29,5 +29,7 @@ public class CreateCampaignRequest {
     @JsonProperty("applicationId")
     private String applicationId;
     private String updateTime;
+    @NotBlank
     private String insertTime;
+    private String creatorUuid;
 }

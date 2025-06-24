@@ -40,4 +40,6 @@ public class CampaignPO {
     @Column(name = "application_id", nullable = false)
     private String applicationId;
 
+    @Column(name = "creator_uuid", nullable = false)
+    private String creatorUuid;
 }
