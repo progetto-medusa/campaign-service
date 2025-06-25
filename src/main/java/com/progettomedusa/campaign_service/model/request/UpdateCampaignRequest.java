@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCampaignRequest {
-    @NotBlank
     private Long id;
     @NotBlank
     private String name;
@@ -23,7 +22,7 @@ public class UpdateCampaignRequest {
     private String description;
     @NotBlank
     private String ruleVersion;
-    @NotNull
+    @NotBlank
     @JsonProperty("application_id")
     private String applicationId;
 }

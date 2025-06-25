@@ -1,5 +1,6 @@
 package com.progettomedusa.campaign_service.model.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateCampaignRequest {
     private Long id;
     @NotBlank
@@ -28,8 +30,8 @@ public class CreateCampaignRequest {
     @NotBlank
     @JsonProperty("applicationId")
     private String applicationId;
-    private String updateTime;
+    private String updateDate;
     @NotBlank
-    private String insertTime;
+    private String insertDate;
     private String creatorUuid;
 }

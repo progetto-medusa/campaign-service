@@ -31,8 +31,8 @@ public class CampaignConverter {
         campaignDTO.setRuleVersion(createCampaignRequest.getRuleVersion());
         campaignDTO.setApplicationId(createCampaignRequest.getApplicationId());
         campaignDTO.setBePrivate(createCampaignRequest.isBePrivate());
-        campaignDTO.setInsertTime(tools.getInstant());
-        campaignDTO.setUpdateTime(tools.getInstant());
+        campaignDTO.setInsertDate(tools.getInstant());
+        campaignDTO.setUpdateDate(tools.getInstant());
         campaignDTO.setCreatorUuid(createCampaignRequest.getCreatorUuid());
 
 
@@ -72,8 +72,8 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
     campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
     campaignPO.setApplicationId(campaignDTO.getApplicationId());
     campaignPO.setBePrivate(campaignDTO.isBePrivate());
-    campaignPO.setInsertTime(tools.getInstant());
-    campaignPO.setCreatorUuid(campaignPO.getCreatorUuid());
+    campaignPO.setInsertDate(tools.getInstant());
+    campaignPO.setCreatorUuid(campaignDTO.getCreatorUuid());
     if (campaignDTO.isBePrivate()) {
         campaignPO.setPassword(campaignDTO.getPassword());
     }
@@ -89,8 +89,7 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
         campaignPO.setDescription(campaignDTO.getDescription());
         campaignPO.setRuleVersion(campaignDTO.getRuleVersion());
         campaignPO.setApplicationId(campaignDTO.getApplicationId());
-        campaignPO.setBePrivate(campaignDTO.isBePrivate());
-        campaignPO.setUpdateTime(tools.getInstant());
+        campaignPO.setUpdateDate(tools.getInstant());
         if (campaignDTO.isBePrivate()) {
             campaignPO.setPassword(campaignDTO.getPassword());
         }
@@ -148,7 +147,7 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
         campaignDTO.setApplicationId(updateCampaignRequest.getApplicationId());
         campaignDTO.setDescription(updateCampaignRequest.getDescription());
         campaignDTO.setRuleVersion(updateCampaignRequest.getRuleVersion());
-        campaignDTO.setUpdateTime(tools.getInstant());
+        campaignDTO.setUpdateDate(tools.getInstant());
 
         log.info("CampaignConverter - updateRequestToDto END with campaignDTO -> {}", campaignDTO);
         return campaignDTO;

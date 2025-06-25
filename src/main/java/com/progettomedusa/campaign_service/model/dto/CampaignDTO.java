@@ -13,8 +13,8 @@ public class CampaignDTO {
     private String password;
     private String ruleVersion;
     private boolean bePrivate;
-    private String insertTime;
-    private String updateTime;
+    private String insertDate;
+    private String updateDate;
     private String applicationId;
     private String creatorUuid;
 /*  private int maxPlayers;

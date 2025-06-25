@@ -19,7 +19,7 @@ public class CampaignPO {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
-    @Column(name = "is_private")
+    @Column(name = "be_private")
     private boolean bePrivate;
 
     @Column(length = 50)
@@ -32,10 +32,10 @@ public class CampaignPO {
     private String ruleVersion;
 
     @Column(name = "update_date", nullable = false)
-    private String updateTime;
+    private String updateDate;
 
     @Column(name = "insert_date", nullable = false)
-    private String insertTime;
+    private String insertDate;
 
     @Column(name = "application_id", nullable = false)
     private String applicationId;

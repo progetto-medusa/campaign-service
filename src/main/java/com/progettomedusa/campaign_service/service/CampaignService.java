@@ -28,7 +28,7 @@ public class CampaignService {
     public CreateRequestResponse createCampaign(CampaignDTO campaignDTO) {
         log.info("Service - Create Campaign START with DTO -> {}", campaignDTO);
 
-        if (campaignDTO.isBePrivate()) {
+        /*if (campaignDTO.isBePrivate()) {
             String password = campaignDTO.getPassword();
             if (password == null || password.length() < 8 || password.length() > 24) {
                 ErrorMsg errorMsg = ErrorMsg.CPGSRV17;
@@ -45,7 +45,7 @@ public class CampaignService {
 
                 return errorResponse;
             }
-        }
+        }*/
 
         CreateRequestResponse createRequestResponse;
         try {
