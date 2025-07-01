@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import static com.progettomedusa.campaign_service.util.Constants.CAMPAIGN_NOT_FOUND_MESSAGE;
 
 @Slf4j
+@RequestMapping("/progetto-medusa")
 @RestController
 @RequiredArgsConstructor
 public class CampaignController {

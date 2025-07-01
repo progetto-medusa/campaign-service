@@ -23,15 +23,15 @@ public class CreateCampaignRequest {
     @Size(min = 1, max = 500)
     private String description;
     @NotBlank
+    @JsonProperty("rule_version")
     private String ruleVersion;
     @NotNull
+    @JsonProperty("be_private")
     private boolean bePrivate;
     private String password;
     @NotBlank
-    @JsonProperty("applicationId")
+    @JsonProperty("application_id")
     private String applicationId;
-    private String updateDate;
-    @NotBlank
-    private String insertDate;
+
     private String creatorUuid;
 }
