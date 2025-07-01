@@ -9,6 +9,7 @@ import com.progettomedusa.campaign_service.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.progettomedusa.campaign_service.model.converter.CampaignConverter;
 
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class CampaignService {
 
     private final CampaignRepository campaignRepository;
-
+    private final PasswordEncoder passwordEncoder;
     private final CampaignConverter campaignConverter;
 
     public CreateRequestResponse createCampaign(CampaignDTO campaignDTO) {
@@ -49,6 +50,10 @@ public class CampaignService {
 
         CreateRequestResponse createRequestResponse;
         try {
+            log.debug("Service - codifica della password START");
+            String encodedPassword = passwordEncoder.encode(campaignDTO.getPassword());
+            campaignDTO.setPassword(encodedPassword);
+            log.debug("Service - codifica della password END");
             CampaignPO campaignToCreate = campaignConverter.dtoToPoForCreate(campaignDTO);
 
             CampaignPO createdCampaign = campaignRepository.save(campaignToCreate);
