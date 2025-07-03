@@ -50,10 +50,12 @@ public class CampaignService {
 
         CreateRequestResponse createRequestResponse;
         try {
-            log.debug("Service - codifica della password START");
-            String encodedPassword = passwordEncoder.encode(campaignDTO.getPassword());
-            campaignDTO.setPassword(encodedPassword);
-            log.debug("Service - codifica della password END");
+            if(campaignDTO.getPassword() != null) {
+                log.debug("Service - codifica della password START");
+                String encodedPassword = passwordEncoder.encode(campaignDTO.getPassword());
+                campaignDTO.setPassword(encodedPassword);
+                log.debug("Service - codifica della password END");
+            }
             CampaignPO campaignToCreate = campaignConverter.dtoToPoForCreate(campaignDTO);
 
             CampaignPO createdCampaign = campaignRepository.save(campaignToCreate);
