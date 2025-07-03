@@ -73,6 +73,7 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
     campaignPO.setApplicationId(campaignDTO.getApplicationId());
     campaignPO.setBePrivate(campaignDTO.isBePrivate());
     campaignPO.setInsertDate(tools.getInstant());
+    campaignPO.setUpdateDate(tools.getInstant());
     campaignPO.setCreatorUuid(campaignDTO.getCreatorUuid());
     if (campaignDTO.isBePrivate()) {
         campaignPO.setPassword(campaignDTO.getPassword());

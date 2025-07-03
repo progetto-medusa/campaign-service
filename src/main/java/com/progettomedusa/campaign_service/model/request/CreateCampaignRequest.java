@@ -32,6 +32,7 @@ public class CreateCampaignRequest {
     @NotBlank
     @JsonProperty("application_id")
     private String applicationId;
-
+    @JsonProperty("creator_uuid")
+    @NotBlank
     private String creatorUuid;
 }
