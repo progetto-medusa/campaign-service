@@ -177,4 +177,26 @@ public CampaignPO dtoToPoForCreate(CampaignDTO campaignDTO) {
         log.info("CampaignConverter - deleteCampaignResponse END with deleteCampaignResponse -> {}", deleteCampaignResponse);
         return deleteCampaignResponse;
     }
+
+    public SearchCampaignResponse listOfCampaignsToSearchCampaignResponse(List<CampaignPO> campaignPOList) {
+        SearchCampaignResponse searchCampaignResponse = new SearchCampaignResponse();
+
+        List<CampaignResponse> campaignResponses = new ArrayList<>();
+        for (CampaignPO campaignPO : campaignPOList) {
+            CampaignResponse campaignResponse = new CampaignResponse();
+            campaignResponse.setName(campaignPO.getName());
+            campaignResponse.setDescription(campaignPO.getDescription());
+            campaignResponse.setBePrivate(campaignPO.isBePrivate());
+            campaignResponse.setCreatorUuid(campaignPO.getCreatorUuid());
+
+            campaignResponses.add(campaignResponse);
+        }
+
+        searchCampaignResponse.setCampaigns(campaignResponses);
+        searchCampaignResponse.setDomain(campaignApplicationProperties.getName());
+        searchCampaignResponse.setTimestamp(tools.getInstant());
+
+        log.info("CampaignConverter - listOfCampaignsToSearchCampaignResponse END with response -> {}", searchCampaignResponse);
+        return searchCampaignResponse;
+    }
 }

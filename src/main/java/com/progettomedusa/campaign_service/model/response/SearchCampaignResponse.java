@@ -1,5 +1,6 @@
 package com.progettomedusa.campaign_service.model.response;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,12 +11,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CampaignResponse {
-    private String name;
-    private String description;
-    private String ruleVersion;
-    private boolean bePrivate;
-    private String creatorUuid;
-    private Error error;
+public class SearchCampaignResponse extends RestResponse{
+    private List<CampaignResponse> campaigns;
 }

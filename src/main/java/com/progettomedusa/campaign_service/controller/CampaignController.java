@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -93,5 +93,22 @@ public class CampaignController {
         DeleteCampaignResponse deleteCampaignResponse = campaignService.deleteCampaign(id);
         log.info("Controller - deleteCampaign END with response -> {}", deleteCampaignResponse);
         return new ResponseEntity<>(deleteCampaignResponse, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/campaigns/search")
+    public ResponseEntity<SearchCampaignResponse> searchCampaigns(
+            @RequestParam(name = "startDate", required = false) String startDate,
+            @RequestParam(name = "campaignName", required = false) String campaignName,
+            @RequestParam(name = "creatorUuid", required = false) String creatorUuid,
+            @RequestParam(name = "limit", required = false) String limit
+    ) {
+        log.info("Controller - searchCampaigns: START");
+        SearchCampaignResponse searchCampaignResponse = campaignService.searchCampaigns(startDate, campaignName, creatorUuid, limit);
+        log.info("Controller - searchCampaigns END with response -> {}", searchCampaignResponse);
+        if (searchCampaignResponse.getDetailed() == null) {
+            return new ResponseEntity<>(searchCampaignResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(searchCampaignResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

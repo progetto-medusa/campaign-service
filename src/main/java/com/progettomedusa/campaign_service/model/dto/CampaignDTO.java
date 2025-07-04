@@ -17,10 +17,4 @@ public class CampaignDTO {
     private String updateDate;
     private String applicationId;
     private String creatorUuid;
-/*  private int maxPlayers;
-    private String playerUsername;
-    private String playerRole;
-    private int minPlayers;
-    */
-
 }

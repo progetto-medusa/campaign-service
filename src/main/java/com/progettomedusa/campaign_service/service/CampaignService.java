@@ -1,11 +1,13 @@
 package com.progettomedusa.campaign_service.service;
 
 import com.progettomedusa.campaign_service.model.dto.CampaignDTO;
+import com.progettomedusa.campaign_service.model.dto.CampaignSearchDTO;
 import com.progettomedusa.campaign_service.model.exception.ErrorMsg;
 import com.progettomedusa.campaign_service.model.po.CampaignPO;
 import com.progettomedusa.campaign_service.model.response.*;
 import com.progettomedusa.campaign_service.model.response.Error;
 import com.progettomedusa.campaign_service.repository.CampaignRepository;
+import com.progettomedusa.campaign_service.repository.CampaignRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class CampaignService {
     private final CampaignRepository campaignRepository;
     private final PasswordEncoder passwordEncoder;
     private final CampaignConverter campaignConverter;
+    private final CampaignRepositoryImpl campaignRepositoryImpl;
 
     public CreateRequestResponse createCampaign(CampaignDTO campaignDTO) {
         log.info("Service - Create Campaign START with DTO -> {}", campaignDTO);
@@ -108,5 +111,17 @@ public class CampaignService {
         campaignRepository.deleteById(id);
         DeleteCampaignResponse deleteCampaignResponse = campaignConverter.deleteCampaignResponse();
         return deleteCampaignResponse;
+    }
+
+    public SearchCampaignResponse searchCampaigns(String startDate, String campaignName, String creatorUuid, String limit) {
+        CampaignSearchDTO searchDTO = new CampaignSearchDTO();
+        searchDTO.setStartDate(startDate);
+        searchDTO.setCampaignName(campaignName);
+        searchDTO.setCreatorUuid(creatorUuid);
+        searchDTO.setLimit(limit);
+
+        List<CampaignPO> filteredCampaigns = campaignRepositoryImpl.findFilteredCampaigns(searchDTO);
+
+        return campaignConverter.listOfCampaignsToSearchCampaignResponse(filteredCampaigns);
     }
 }
